@@ -2,23 +2,30 @@
 
 namespace App\Http\Controllers;
 
+use App\Exceptions\CommentException;
 use App\Models\Comment;
 use App\Models\User;
+use App\Services\CommentService;
+use Exception;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 
 class HomeController extends Controller
 {
+    private $commentService;
     /**
      * Create a new controller instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(CommentService $commentService)
     {
         $this->middleware('auth');
+        $this->commentService = $commentService;
     }
 
     /**
@@ -28,6 +35,10 @@ class HomeController extends Controller
      */
     public function index()
     {
+        // throw new Exception('Error rồi');
+        // Log::channel('testlog')->info('User to home.', [
+        //     'id' => Auth::user()->id
+        // ]);
         return view('home');
     }
 
@@ -54,6 +65,18 @@ class HomeController extends Controller
     {
         $comments = Comment::all();
         return view('comments.show', compact('comments'));
+    }
+
+    public function searchComment(Request $request)
+    {
+        try {
+            $commentSearch = $this->commentService->search($request->id);
+        } catch (CommentException $exception) {
+            // throw $exception;
+            return back()->withError($exception->getMessage())->withInput();
+        }
+        // $commentSearch = Comment::find($request->id);
+        return view('comments.show', compact('commentSearch'));
     }
 
     public function createComment()

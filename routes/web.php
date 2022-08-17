@@ -34,10 +34,9 @@ Route::prefix('/home')->middleware('auth')->group(function () {
 
     Route::prefix('/comment')->group(function () {
         Route::get('/show', [HomeController::class, 'showComment'])->name('comment.show');
+        Route::post('/search', [HomeController::class, 'searchComment'])->name('comment.search');
         Route::get('/create', [HomeController::class, 'createComment'])->name('comment.create');
         Route::post('/create', [HomeController::class, 'storeComment'])->name('comment.store');
         Route::get('/{comment_id}', [HomeController::class, 'editComment'])->name('commment.edit');
     });
-
-    // Route::get('{comment_id}', [HomeController::class, 'editComment']);
 });
