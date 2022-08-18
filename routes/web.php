@@ -39,4 +39,6 @@ Route::prefix('/home')->middleware('auth')->group(function () {
         Route::post('/create', [HomeController::class, 'storeComment'])->name('comment.store');
         Route::get('/{comment_id}', [HomeController::class, 'editComment'])->name('commment.edit');
     });
+
+    Route::get('/send-mail', [HomeController::class,'sendMail'])->name('mail');
 });

@@ -27,6 +27,10 @@
                 <div class="card-body">
                     <a class="btn btn-primary w-100" href="{{ route('comment.show') }}">Show Comments</a>
                 </div>
+
+                <div class="card-body">
+                    <a class="btn btn-primary w-100" href="{{ route('mail') }}">Send Email</a>
+                </div>
             </div>
         </div>
     </div>

@@ -12,6 +12,18 @@
                         @csrf
 
                         <div class="row mb-3">
+                            <label for="content" class="col-md-4 col-form-label text-md-end">{{ __('Test Cookie') }}</label>
+
+                            <div class="col-md-6">
+                                <input required class="form-control" name="test_cookie" 
+                                    @isset($test)
+                                        value="{{ $test }}"
+                                    @endisset
+                                >
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
                             <label for="content" class="col-md-4 col-form-label text-md-end">{{ __('Content') }}</label>
 
                             <div class="col-md-6">

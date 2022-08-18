@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\PodcastProcessed;
 use App\Exceptions\CommentException;
+use App\Mail\HelloMail;
 use App\Models\Comment;
 use App\Models\User;
 use App\Services\CommentService;
@@ -13,6 +15,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class HomeController extends Controller
 {
@@ -39,7 +42,20 @@ class HomeController extends Controller
         // Log::channel('testlog')->info('User to home.', [
         //     'id' => Auth::user()->id
         // ]);
+        // event(new PodcastProcessed('nuoooo', Auth::user()));
+        // PodcastProcessed::dispatch('nuoooo ga', Auth::user());
+
         return view('home');
+    }
+
+    public function sendMail()
+    {
+        // $user = Auth::user();
+        // $mailable = new HelloMail($user);
+        // Mail::to("blcm2486@gmail.com")->send($mailable);
+        event(new PodcastProcessed('a', Auth::user()));
+        
+        return redirect()->back();
     }
 
     public function showInfo()
@@ -79,19 +95,26 @@ class HomeController extends Controller
         return view('comments.show', compact('commentSearch'));
     }
 
-    public function createComment()
+    public function createComment(Request $request)
     {
-        return view('comments.create');
+        $test = $request->cookie('test_cookie');
+        return view('comments.create', compact(['test']));
     }
 
     public function storeComment(Request $request)
     {
+        $test = $request->test_cookie;
+        $minutes = 0.5;
+        $test_cookie = cookie('test_cookie', $test, $minutes);
+
         Comment::create([
             'user_id' => Auth::user()->id,
             'content' => $request->content
         ]);
 
-        return redirect()->route('home')->with('status', 'Tạo comment thành công!');
+        return redirect()->route('home')
+            ->with('status', 'Tạo comment thành công!')
+            ->withCookie($test_cookie);
     }
 
     public function editComment(Request $request, $comment_id)
