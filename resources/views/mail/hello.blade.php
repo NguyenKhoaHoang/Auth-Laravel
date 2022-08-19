@@ -8,5 +8,6 @@
 </head>
 <body>
     Hello {{ $user->name }}
+    Hi ne
 </body>
 </html>

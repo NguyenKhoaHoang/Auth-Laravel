@@ -10,8 +10,10 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Notification;
+use Throwable;
 
 class SendEmailJob implements ShouldQueue
 {
@@ -41,5 +43,10 @@ class SendEmailJob implements ShouldQueue
 
         Notification::route('mail', ['blcm2486@gmail.com'])
             ->notify(new SendNotificationEmail($this->user));
+    }
+
+    public function failed(Throwable $exception)
+    {
+        Log::error('nuoooo');
     }
 }

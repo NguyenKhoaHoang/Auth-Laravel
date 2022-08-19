@@ -43,8 +43,10 @@ class SendNotificationEmail extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-            ->line($this->user->name)
-            ->action('Go to App', url('/'))
+            ->line(view('mail.hello')->with([
+                'user' => $this->user
+            ]))
+            ->action('Go to App', 'localhost:8000/home')
             ->line('Thank you!!');
     }
 
