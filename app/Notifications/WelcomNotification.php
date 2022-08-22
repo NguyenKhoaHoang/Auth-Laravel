@@ -2,25 +2,23 @@
 
 namespace App\Notifications;
 
-use App\Mail\HelloMail;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class SendNotificationEmail extends Notification
+class WelcomNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
-    private $user;
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct($user)
+    public function __construct()
     {
-        $this->user = $user;
+        //
     }
 
     /**
@@ -43,14 +41,9 @@ class SendNotificationEmail extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-            ->line(view('mail.hello')->with([
-                'user' => $this->user
-            ]))
-            ->action('Go to App', 'localhost:8000/home')
-            ->line('Thank you!!');
-        // return (new MailMessage)->view('mail.hello', [
-        //     'user' => $this->user
-        // ]);
+                    ->line('The introduction to the notification.')
+                    ->action('Notification Action', url('/'))
+                    ->line('Thank you for using our application!');
     }
 
     /**

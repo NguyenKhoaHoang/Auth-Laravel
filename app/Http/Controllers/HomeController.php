@@ -7,6 +7,10 @@ use App\Exceptions\CommentException;
 use App\Mail\HelloMail;
 use App\Models\Comment;
 use App\Models\User;
+use App\Notifications\InvoicePaid;
+use App\Notifications\SmSNotification;
+use App\Notifications\UserFollowNotification;
+use App\Notifications\WelcomNotification;
 use App\Services\CommentService;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -16,6 +20,7 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Notification;
 
 class HomeController extends Controller
 {
@@ -50,11 +55,48 @@ class HomeController extends Controller
 
     public function sendMail()
     {
-        // $user = Auth::user();
+
         // $mailable = new HelloMail($user);
         // Mail::to("blcm2486@gmail.com")->send($mailable);
         event(new PodcastProcessed('a', Auth::user()));
+        return redirect()->back();
+    }
+
+    public function notification()
+    {
+
+        // Auth::user()->notifications()->delete();
+        // $user = User::find(11);
+        // $user->notifications()->delete();
+        Notification::send(Auth::user(), new WelcomNotification);
+
+        // Auth::user()->notify(new WelcomNotification);
+
+        // Notification::send(Auth::user(), new UserFollowNotification($user));
+        // Notification::send(Auth::user(), new SmSNotification);
+        // Notification::send(Auth::user(), new InvoicePaid);
+
+        // $basic  = new \Vonage\Client\Credentials\Basic("c62796d9", "us1thBPvEgeuxeWf");
+        // $client = new \Vonage\Client($basic);
+        // $response = $client->sms()->send(
+        //     new \Vonage\SMS\Message\SMS("84773412924", 'BRAND_NAME', 'A text message sent using the Nexmo SMS API')
+        // );
         
+        // $message = $response->current();
+        
+        // if ($message->getStatus() == 0) {
+        //     echo "The message was sent successfully\n";
+        // } else {
+        //     echo "The message failed with status: " . $message->getStatus() . "\n";
+        // }
+        return redirect()->back();
+    }
+
+    public function markAsRead($id)
+    {
+        if ($id) {
+            Auth::user()->unreadNotifications->where('id', $id)->markAsRead();
+        }
         return redirect()->back();
     }
 

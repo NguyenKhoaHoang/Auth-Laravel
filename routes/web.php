@@ -40,5 +40,8 @@ Route::prefix('/home')->middleware('auth')->group(function () {
         Route::get('/{comment_id}', [HomeController::class, 'editComment'])->name('commment.edit');
     });
 
-    Route::get('/send-mail', [HomeController::class,'sendMail'])->name('mail');
+    Route::get('/send-mail', [HomeController::class, 'sendMail'])->name('mail');
+
+    Route::get('/notification', [HomeController::class, 'notification'])->name('notification');
+    Route::get('/mark-as-read/{id}', [HomeController::class, 'markAsRead'])->name('markAsRead');
 });
