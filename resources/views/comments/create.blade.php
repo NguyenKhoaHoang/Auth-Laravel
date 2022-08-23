@@ -8,7 +8,7 @@
                 <div class="card-header">{{ __('Create Comment') }}</div>
 
                 <div class="card-body">
-                    <form method="POST" action="{{ route('comment.store') }}">
+                    <form method="POST" action="{{ route('comment.store') }}" enctype="multipart/form-data">
                         @csrf
 
                         <div class="row mb-3">
@@ -29,6 +29,14 @@
                             <div class="col-md-6">
                                 <textarea required class="form-control" name="content" id="" cols="30" rows="10"></textarea>
                             </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <label for="photo" class="col-md-4 col-form-label text-md-end">Attach a photograph</label>
+                            <div class="col-md-6">
+                                <input type="file" name="photo" id="photo" class="form-control-file" required>
+                            </div>
+                            
                         </div>
 
                         <div class="row mb-0">

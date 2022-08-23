@@ -16,11 +16,13 @@ use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\Storage;
 
 class HomeController extends Controller
 {
@@ -32,7 +34,7 @@ class HomeController extends Controller
      */
     public function __construct(CommentService $commentService)
     {
-        $this->middleware('auth');
+        // $this->middleware('auth');
         $this->commentService = $commentService;
     }
 
@@ -81,9 +83,9 @@ class HomeController extends Controller
         // $response = $client->sms()->send(
         //     new \Vonage\SMS\Message\SMS("84773412924", 'BRAND_NAME', 'A text message sent using the Nexmo SMS API')
         // );
-        
+
         // $message = $response->current();
-        
+
         // if ($message->getStatus() == 0) {
         //     echo "The message was sent successfully\n";
         // } else {
@@ -119,6 +121,22 @@ class HomeController extends Controller
         return redirect()->route('home')->with('status', 'Cập nhật thành công!');
     }
 
+
+    public function uploadAPI(Request $request)
+    {
+        // dd($request->file('file'));
+        // $file = $request->file('file');
+        // $filename = $file->getClientOriginalName() . '.' . $file->getClientOriginalExtension();
+        // $result = $request->file->move('storage/APIFile', $filename);
+        // return view('api.view', compact('result'));
+
+        $rs = $request->file('file')->storeAs('public/apiDocs', $request->file('file')->getClientOriginalName());
+        // $rs = Storage::putFile('apiDocs', $request->file('file')->getClientOriginalName());
+        $result = Storage::url($rs);
+
+        return view('api.view', compact('result'));
+    }
+
     public function showComment()
     {
         $comments = Comment::all();
@@ -143,15 +161,27 @@ class HomeController extends Controller
         return view('comments.create', compact(['test']));
     }
 
+    protected function storeImage(Request $request)
+    {
+        // $path = $request->file('photo')->store('public/photo');
+        // return substr($path, strlen('public/'));
+
+        $rs = $request->file('photo')->storeAs('public/photo', $request->file('photo')->getClientOriginalName());
+        $result = Storage::url($rs);
+        return $result;
+    }
+
     public function storeComment(Request $request)
     {
         $test = $request->test_cookie;
         $minutes = 0.5;
         $test_cookie = cookie('test_cookie', $test, $minutes);
+        $imageUrl = $this->storeImage($request);
 
         Comment::create([
             'user_id' => Auth::user()->id,
-            'content' => $request->content
+            'content' => $request->content,
+            'photo' => $imageUrl
         ]);
 
         return redirect()->route('home')

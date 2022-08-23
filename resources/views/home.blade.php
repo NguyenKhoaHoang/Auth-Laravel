@@ -1,3 +1,4 @@
+
 @extends('layouts.app')
 
 @section('content')
@@ -51,6 +52,18 @@
 
                     <div class="card-body">
                         <a class="btn btn-primary w-100" href="{{ route('notification') }}">Send Notification</a>
+                    </div>
+
+                    <div class="card-body">
+                        <form method="POST" action="{{ route('uploadAPI') }}" enctype="multipart/form-data">
+                            @csrf
+                            <label for="photo" class="col-md-4 col-form-label text-md-end">Upload file API</label>
+                            <input type="file" name="file" class="form-control-file" required accept="/*">
+                            <button type="submit" class="btn btn-primary">
+                                Upload file
+                            </button>
+                        </form>
+                        
                     </div>
                 </div>
             </div>
