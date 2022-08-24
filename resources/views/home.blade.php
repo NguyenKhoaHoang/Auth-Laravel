@@ -68,6 +68,10 @@
                     <div class="card-body">
                         <a class="btn btn-primary w-100" href="{{ route('cache') }}">Cache</a>
                     </div>
+
+                    <div class="card-body">
+                        <a class="btn btn-primary w-100" href="{{ route('httpClient') }}">Http client</a>
+                    </div>
                 </div>
             </div>
         </div>

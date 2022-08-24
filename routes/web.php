@@ -46,4 +46,5 @@ Route::prefix('/home')->middleware('auth')->group(function () {
     Route::get('/mark-as-read/{id}', [HomeController::class, 'markAsRead'])->name('markAsRead');
 
     Route::get('/cache', [HomeController::class, 'cache'])->name('cache');
+    Route::get('/http-client', [HomeController::class, 'httpClient'])->name('httpClient');
 });

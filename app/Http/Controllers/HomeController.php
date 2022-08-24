@@ -14,6 +14,7 @@ use App\Notifications\UserFollowNotification;
 use App\Notifications\WelcomNotification;
 use App\Services\CommentService;
 use Exception;
+use GuzzleHttp\Client;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -22,10 +23,12 @@ use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Storage;
+use Maknz\Slack\Client as SlackClient;
 
 class HomeController extends Controller
 {
@@ -108,6 +111,70 @@ class HomeController extends Controller
         // return view('home');
     }
 
+
+    public function httpClient()
+    {
+        // $response = Http::get('http://127.0.0.1:8001/api/user', [
+        //     'name' => 'Taylor'
+        // ]);
+
+        // $response = Http::attach(
+        //     'image',
+        //     file_get_contents('storage/photo/test.png'),
+        //     'test.png'
+        // )->post('http://127.0.0.1:8001/api/user', [
+        //     'name' => 'Taylor',
+        //     'email' => 'nuooo'
+        // ]);
+
+        // $response = Http::withHeaders([
+        //     'authorization'=>'token'
+        // ])->post('http://127.0.0.1:8001/api/header');
+
+        // dd($response->json());
+
+        // return Http::get('http://127.0.0.1:8001/api/user')['email'];
+
+
+        // -----------------------------
+
+        // $response = Http::get('https://jsonplaceholder.typicode.com/posts');
+        // $response = Http::get('https://jsonplaceholder.typicode.com/posts/5');
+
+        // $response = Http::get('https://jsonplaceholder.typicode.com/posts', [
+        //     'id' => 1
+        // ]);
+
+        // $response = Http::post('https://jsonplaceholder.typicode.com/posts', [
+        //     'userId' => 1,
+        //     'title'=>'nuooo',
+        //     'body'=>'damn'
+        // ]);
+
+        // $response = Http::put('https://jsonplaceholder.typicode.com/posts/5', [
+        //     'title' => 'Updated',
+        //     'body' => 'damn bruh'
+        // ]);
+
+
+        // $response = Http::delete('https://jsonplaceholder.typicode.com/posts/5');
+
+
+
+        $url = 'https://hooks.slack.com/services/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';
+
+        // $client = new SlackClient($url);
+        // $client->send('haha');
+
+        $response = Http::withHeaders([
+            'Content_type' => 'application/json'
+        ])->post($url, [
+            "text" => "Hello, world."
+        ]);
+        return redirect()->back();
+        // return $response->json();
+    }
+
     public function sendMail()
     {
 
@@ -121,13 +188,13 @@ class HomeController extends Controller
     {
 
         // Auth::user()->notifications()->delete();
-        // $user = User::find(11);
+        $user = User::find(11);
         // $user->notifications()->delete();
-        Notification::send(Auth::user(), new WelcomNotification);
+        // Notification::send(Auth::user(), new WelcomNotification);
 
         // Auth::user()->notify(new WelcomNotification);
 
-        // Notification::send(Auth::user(), new UserFollowNotification($user));
+        Notification::send(Auth::user(), new UserFollowNotification($user));
         // Notification::send(Auth::user(), new SmSNotification);
         // Notification::send(Auth::user(), new InvoicePaid);
 
