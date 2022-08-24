@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\CommentCreated;
 use App\Events\PodcastProcessed;
 use App\Exceptions\CommentException;
 use App\Mail\HelloMail;
@@ -16,6 +17,8 @@ use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
@@ -53,6 +56,56 @@ class HomeController extends Controller
         // PodcastProcessed::dispatch('nuoooo ga', Auth::user());
 
         return view('home');
+    }
+
+    public function cache()
+    {
+        // Them Cache, neu da co cache co key ton tai thi xoa no va them moi
+        // Cache::put('cacheKey', 'This should be a cache key', now()->addSecond(10));
+
+        // Them Cache neu chua co key do
+        // Cache::add('cacheKey', 'This should be a cache key 2', now()->addSecond(10));
+
+
+        // Them cache forever, ko bao gio het han
+        // Cache::forever('cacheKey2', 'nuoo');
+
+        // Xoa tung cache
+        // Cache::forget('cacheKey2');
+
+        // Xoa het tat ca cac cache
+        // Cache::flush();
+
+
+        // Kiem tra xem cache co ton tai ko
+        // if (Cache::has('cacheKey2')) {
+        //     dd('Cache does exist');
+        // }
+
+        // DUng de tang nhung cache co value la integer, neu ko thi thay the no.
+        // Cache::increment('cacheKey2', 4);
+        // Cache::decrement('cacheKey2', 4);
+
+        // dd(Cache::get('cacheKey2'));
+
+        // $comments = cache('comments', function () {
+        //     return Comment::get();
+        // });
+
+        // $comments = Cache::get('comments');
+
+        // Neu ma co cache san roi thi lay cache do, ko thi them cache moi vao
+        $comments = Cache::rememberForever('comments', function () {
+            return Comment::get();
+        });
+
+
+        // Lay cache roi xoa cache do luon
+        // $comments = Cache::pull('comments');
+
+
+        return view('comments.show', compact('comments'));
+        // return view('home');
     }
 
     public function sendMail()
@@ -184,6 +237,8 @@ class HomeController extends Controller
             'photo' => $imageUrl
         ]);
 
+        // Event::dispatch(new CommentCreated());
+        // event(new CommentCreated());
         return redirect()->route('home')
             ->with('status', 'Tạo comment thành công!')
             ->withCookie($test_cookie);

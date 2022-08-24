@@ -61,7 +61,7 @@
                                         <td>{{ $comment->content }}</td>
                                         <td>{{ $comment->user->name }}</td>
                                         <td>
-                                            <div class="ratio ratio-16x9" style="width: 200px; height: 100px;">
+                                            <div class="ratio ratio-16x9" style="width: 500px; height: 200px;">
                                                 <iframe t src="{{ asset($comment->photo) }}" title="File Uploaded" allowfullscreen></iframe>
                                             </div>
                                         </td>

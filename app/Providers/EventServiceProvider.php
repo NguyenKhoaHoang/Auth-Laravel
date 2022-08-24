@@ -2,12 +2,14 @@
 
 namespace App\Providers;
 
+use App\Events\CommentCreated;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Event;
 use App\Events\DemoEvent;
 use App\Events\PodcastProcessed;
+use App\Listeners\CommentCacheListener;
 use App\Listeners\DemoListener;
 use App\Listeners\SendPodcastNotification;
 use Illuminate\Support\Facades\Log;
@@ -29,7 +31,13 @@ class EventServiceProvider extends ServiceProvider
 
         DemoEvent::class => [
             DemoListener::class
+        ],
+
+        CommentCreated::class => [
+            CommentCacheListener::class
         ]
+
+        
     ];
 
     /**

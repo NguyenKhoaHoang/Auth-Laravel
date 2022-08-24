@@ -27,7 +27,6 @@
                         @foreach (auth()->user()->readNotifications as $notification)
                             <div class="alert alert-success" role="alert">
                                 {{ $notification->data['name'] }} started following you!!
-                                <a href="{{ route('markAsRead', [$notification->id]) }}">Mask as read</a>
                             </div>
                         @endforeach
                     </div>
@@ -63,7 +62,11 @@
                                 Upload file
                             </button>
                         </form>
-                        
+                    </div>
+
+
+                    <div class="card-body">
+                        <a class="btn btn-primary w-100" href="{{ route('cache') }}">Cache</a>
                     </div>
                 </div>
             </div>
