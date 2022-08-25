@@ -38,6 +38,10 @@
                     </div>
 
                     <div class="card-body">
+                        <a class="btn btn-primary w-100" href="{{ route('relationship.categories.post') }}">Relationship</a>
+                    </div>
+
+                    <div class="card-body">
                         <a class="btn btn-primary w-100" href="{{ route('comment.create') }}">Create Comment</a>
                     </div>
 

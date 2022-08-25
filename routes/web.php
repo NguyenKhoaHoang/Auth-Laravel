@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\RelationshipController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
@@ -47,4 +48,26 @@ Route::prefix('/home')->middleware('auth')->group(function () {
 
     Route::get('/cache', [HomeController::class, 'cache'])->name('cache');
     Route::get('/http-client', [HomeController::class, 'httpClient'])->name('httpClient');
+
+    Route::prefix('/relationship')->group(function () {
+        Route::get('/avatar', [RelationshipController::class, 'avatar'])->name('relationship.avatar');
+        Route::get('/posts', [RelationshipController::class, 'posts'])->name('relationship.posts');
+        Route::get('/categories', [RelationshipController::class, 'categories'])->name('relationship.categories');
+
+        Route::get('/category-attach', [RelationshipController::class, 'categoryAttach'])
+            ->name('relationship.categories.attach');
+
+        Route::get('/category-detach', [RelationshipController::class, 'categoryDetach'])
+            ->name('relationship.categories.detach');
+
+        Route::get('/category-sync', [RelationshipController::class, 'categorySync'])
+            ->name('relationship.categories.sync');
+
+        Route::get('/category-pivot', [RelationshipController::class, 'categoryPivot'])
+            ->name('relationship.categories.pivot');
+
+        // Through
+        Route::get('/category-post', [RelationshipController::class, 'categoryPost'])
+            ->name('relationship.categories.post');
+    });
 });

@@ -42,6 +42,43 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    public function avatar()
+    {
+        // return $this->hasOne('App\Models\Avatar');
+        // return $this->hasOne(Avatar::class);
+        return $this->hasOne(Avatar::class, 'user_id', 'id');
+    }
+
+    public function posts()
+    {
+        return $this->hasMany(Post::class, 'user_id', 'id');
+    }
+
+    public function newPost()
+    {
+        return $this->hasOne(Post::class, 'user_id', 'id')->latestOfMany();
+    }
+
+    public function orderByDescPost()
+    {
+        return $this->hasOne(Post::class, 'user_id', 'id')->orderByDesc('name');
+    }
+
+    public function category()
+    {
+        return $this->hasOne(Category::class, 'user_id', 'id');
+    }
+
+    public function categoryPost()
+    {
+        return $this->hasOneThrough(Post::class, Category::class)->orderByDesc('content');
+    }
+
+    public function categoryPosts()
+    {
+        return $this->hasManyThrough(Post::class, Category::class);
+    }
+
     public function routeNotificationForSlack($notification)
     {
         return 'https://hooks.slack.com/services/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';
