@@ -21,4 +21,9 @@ class Category extends Model
     {
         return $this->hasOne(Post::class, 'category_id', 'id');
     }
+
+    public function tags()
+    {
+        return $this->morphToMany(Tag::class, 'taggable');
+    }
 }

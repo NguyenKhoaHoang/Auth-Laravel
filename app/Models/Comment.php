@@ -17,6 +17,11 @@ class Comment extends Model
         return $this->belongsTo(User::class, 'user_id');
     }
 
+    public function commentable()
+    {
+        return $this->morphTo();
+    }
+
     protected $dispatchesEvents = [
         'created' => CommentCreated::class
     ];

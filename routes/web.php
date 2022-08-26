@@ -69,5 +69,16 @@ Route::prefix('/home')->middleware('auth')->group(function () {
         // Through
         Route::get('/category-post', [RelationshipController::class, 'categoryPost'])
             ->name('relationship.categories.post');
+
+
+        // Polymorphic
+        Route::get('poly-one-one', [RelationshipController::class, 'polyOneOne'])->name('relationship.poly.oneone');
+        Route::get('poly-one-many', [RelationshipController::class, 'polyOneMany'])->name('relationship.poly.onemany');
+        Route::get('poly-one-create', [RelationshipController::class, 'polyOneCreate'])
+            ->name('relationship.poly.onecreate');
+        Route::get('poly-many-create', [RelationshipController::class, 'polyManyCreate'])
+            ->name('relationship.poly.manycreate');
+        Route::get('poly-many-many', [RelationshipController::class, 'polyManyMany'])
+            ->name('relationship.poly.manymany');
     });
 });

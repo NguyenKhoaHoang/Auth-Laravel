@@ -79,6 +79,11 @@ class User extends Authenticatable
         return $this->hasManyThrough(Post::class, Category::class);
     }
 
+    public function image()
+    {
+        return $this->morphOne(Image::class, 'imageable');
+    }
+
     public function routeNotificationForSlack($notification)
     {
         return 'https://hooks.slack.com/services/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';

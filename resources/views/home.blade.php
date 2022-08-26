@@ -38,7 +38,7 @@
                     </div>
 
                     <div class="card-body">
-                        <a class="btn btn-primary w-100" href="{{ route('relationship.categories.post') }}">Relationship</a>
+                        <a class="btn btn-primary w-100" href="{{ route('relationship.poly.manymany') }}">Relationship</a>
                     </div>
 
                     <div class="card-body">
