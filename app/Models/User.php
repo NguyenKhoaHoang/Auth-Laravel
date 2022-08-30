@@ -42,6 +42,8 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    // protected $with = ['posts','image'];
+
     public function avatar()
     {
         // return $this->hasOne('App\Models\Avatar');
@@ -71,7 +73,17 @@ class User extends Authenticatable
 
     public function categoryPost()
     {
-        return $this->hasOneThrough(Post::class, Category::class)->orderByDesc('content');
+        /**
+         * Tham số truyền vào lần lượt là:
+         * - Bảng con
+         * - Bảng trung gian kết nối với bảng con
+         * - Khóa ngoại của bảng cha ở bảng trung gian
+         * - Khóa ngoại của bảng trung gian ở bảng con
+         * - Khóa chinh của bảng cha
+         * - Khóa chính của bang trung gian
+         */
+        return $this->hasOneThrough(Post::class, Category::class, 'user_id', 'category_id', 'id', 'id')
+            ->orderByDesc('content');
     }
 
     public function categoryPosts()

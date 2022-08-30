@@ -80,5 +80,9 @@ Route::prefix('/home')->middleware('auth')->group(function () {
             ->name('relationship.poly.manycreate');
         Route::get('poly-many-many', [RelationshipController::class, 'polyManyMany'])
             ->name('relationship.poly.manymany');
+
+        // Eager Loading
+        Route::get('all-post', [RelationshipController::class, 'allPost'])->name('eager.allPost');
+        Route::get('all-comment', [RelationshipController::class, 'imageEagerMorph'])->name('eager.allComments');
     });
 });

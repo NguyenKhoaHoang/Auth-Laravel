@@ -38,7 +38,11 @@
                     </div>
 
                     <div class="card-body">
-                        <a class="btn btn-primary w-100" href="{{ route('relationship.poly.manymany') }}">Relationship</a>
+                        <a class="btn btn-primary w-100" href="{{ route('relationship.avatar') }}">Relationship</a>
+                    </div>
+
+                    <div class="card-body">
+                        <a class="btn btn-primary w-100" href="{{ route('eager.allPost') }}">Eager loading</a>
                     </div>
 
                     <div class="card-body">

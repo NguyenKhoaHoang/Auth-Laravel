@@ -12,6 +12,15 @@ class Category extends Model
 
     public function posts()
     {
+        /**
+         * Tham số truyền vào lần lượt là:
+         * - Model lớp cần kết nối
+         * - Tên Bảng trung gian
+         * - Khóa ngoại ở bảng trung gian của Model hiện tại (Model Category)
+         * - Khóa ngoại ở bảng trung gian của Model lớp cần kết nối (Model Post)
+         * - Khóa chính ở Model hiện tại
+         * - Khóa chính ở Model cần kết nối
+         */
         return $this->belongsToMany(Post::class, 'category_post', 'category_id', 'post_id', 'id', 'id')
             ->withPivot('value');
     }

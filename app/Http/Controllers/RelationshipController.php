@@ -9,6 +9,8 @@ use App\Models\Image;
 use App\Models\Post;
 use App\Models\Tag;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Http\Request;
 
 class RelationshipController extends Controller
@@ -18,7 +20,7 @@ class RelationshipController extends Controller
         $user = User::find(11);
 
         $avatar = Avatar::find(1);
-        dd($avatar->user->name);
+        echo $avatar->user->name;
 
         dd($user->avatar);
     }
@@ -185,5 +187,52 @@ class RelationshipController extends Controller
         dd($tag->categories);
 
         // dd($post->tags);
+    }
+
+    public function allPost()
+    {
+        // $posts = Post::all();
+        $posts = Post::with([
+            'user.image',
+            'categories' => function ($query) {
+                $query->whereNull('created_at')->with(['posts','tags']);
+            }
+        ])->get();
+
+
+        // $posts = Post::with('user')->get();
+        // Chi lay so luong cua category
+        // $posts = Post::with('user:id,name')->withCount('categories')->get();
+
+        // load user.image tu cac doi tuong Post co tu truoc
+        // $posts = $this->getAllPost()->load('user.image');
+        // dd($posts);
+        return view('relationship.allPost', compact('posts'));
+    }
+
+    private function getAllPost()
+    {
+        return Post::all();
+    }
+
+    public function imageEagerMorph()
+    {
+        $comments = Comment::with(['commentable' => function (MorphTo $morphTo) {
+            $morphTo->constrain([
+                Post::class => function (Builder $query) {
+                    $query->where('category_id', 1);
+                }
+            ])->morphWith([
+                Post::class => ['user'],
+                Image::class
+            ]);
+        }])->get();
+
+        // $comments = Comment::with('commentable');
+
+        // $comments = Comment::all();
+        // dd($comments);
+
+        return view('relationship.allComments', compact('comments'));
     }
 }
