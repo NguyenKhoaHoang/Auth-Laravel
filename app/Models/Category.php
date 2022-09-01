@@ -31,6 +31,11 @@ class Category extends Model
         return $this->hasOne(Post::class, 'category_id', 'id');
     }
 
+    public function posts2()
+    {
+        return $this->hasMany(Post::class, 'category_id', 'id');
+    }
+
     public function tags()
     {
         return $this->morphToMany(Tag::class, 'taggable');

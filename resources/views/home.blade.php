@@ -46,6 +46,10 @@
                     </div>
 
                     <div class="card-body">
+                        <a class="btn btn-primary w-100" href="{{ route('relationship.condition') }}">Condition Relationship</a>
+                    </div>
+
+                    <div class="card-body">
                         <a class="btn btn-primary w-100" href="{{ route('comment.create') }}">Create Comment</a>
                     </div>
 

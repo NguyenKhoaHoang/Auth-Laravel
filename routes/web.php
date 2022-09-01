@@ -84,5 +84,9 @@ Route::prefix('/home')->middleware('auth')->group(function () {
         // Eager Loading
         Route::get('all-post', [RelationshipController::class, 'allPost'])->name('eager.allPost');
         Route::get('all-comment', [RelationshipController::class, 'imageEagerMorph'])->name('eager.allComments');
+
+        // Querying Relations
+        Route::get('condition-relationship', [RelationshipController::class, 'conditionRelationship'])
+            ->name('relationship.condition');
     });
 });

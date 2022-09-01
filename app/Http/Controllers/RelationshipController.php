@@ -15,6 +15,9 @@ use Illuminate\Http\Request;
 
 class RelationshipController extends Controller
 {
+    /**
+     * All relationship
+     */
     public function avatar()
     {
         $user = User::find(11);
@@ -189,13 +192,17 @@ class RelationshipController extends Controller
         // dd($post->tags);
     }
 
+    /**
+     * Eager Loading
+     */
+
     public function allPost()
     {
         // $posts = Post::all();
         $posts = Post::with([
             'user.image',
             'categories' => function ($query) {
-                $query->whereNull('created_at')->with(['posts','tags']);
+                $query->whereNull('created_at')->with(['posts', 'tags']);
             }
         ])->get();
 
@@ -220,7 +227,7 @@ class RelationshipController extends Controller
         $comments = Comment::with(['commentable' => function (MorphTo $morphTo) {
             $morphTo->constrain([
                 Post::class => function (Builder $query) {
-                    $query->where('category_id', 1);
+                    $query->where('category_id', 1)->where('name');
                 }
             ])->morphWith([
                 Post::class => ['user'],
@@ -234,5 +241,75 @@ class RelationshipController extends Controller
         // dd($comments);
 
         return view('relationship.allComments', compact('comments'));
+    }
+
+    /**
+     * Condition Relationship
+     */
+    public function conditionRelationship()
+    {
+        // Lấy ra những User nào có bài viết Post
+        // $user = User::has('posts')->get();
+        // dd($user);
+
+        // Lấy ra các User có Post thuộc category_id = 1
+        // $user = User::whereHas('posts', function ($query) {
+        //     $query->where('category_id', 1);
+        // })->get();
+        // dd($user);
+
+        // Dùng biến ở ngoài truyền vào bên trong điều kiện quan hệ
+        // $post_name = 'name 1';
+        // $post_name2 = 'name 2';
+        // $user = User::whereHas('posts', function ($query) use ($post_name, $post_name2) {
+        //     $query->where('category_id', 1)->where('name', $post_name2)->orWhere('name', $post_name);
+        // })->get();
+        // dd($user);
+
+        // Where quan hệ lồng nhau
+        // $user = User::whereHas('posts', function ($query) {
+        //     $query->whereHas('category', function ($query1) {
+        //         $query1->where('user_id', 11);
+        //     });
+        // })->get();
+        // dd($user);
+
+        // Lấy ra các User có Post thuộc category_id = 1
+        // $user = User::whereRelation('posts', 'category_id', 1)->get();
+        // dd($user);
+
+        // // Lấy ra những User không có Post nào
+        // $user = User::doesntHave('posts')->get();
+        // dd($user);
+
+        // Lấy ra những User ko có Post category_id = 1
+        // $user = User::wheredoesntHave('posts', function (Builder $query) {
+        //     $query->where('category_id', 1)->orWhere('category_id', 2);
+        // })->get();
+        // dd($user);
+
+        // Lấy ra những User mà có Post ko thuộc về Category mà có user_id là 11
+        // $user = User::query()->whereDoesntHave('posts.category', function (Builder $query) {
+        //     $query->where('user_id', 11);
+        // })->get();
+        // dd($user);
+
+            
+        $comments = Comment::query()->whereHasMorph(
+            'commentable',
+            [Post::class, Image::class],
+            // Image::class,
+            // '*',
+            // function (Builder $query) {
+            //     $query->whereNot('created_at', null);
+            // }
+            function (Builder $query, $type) {
+                $column = $type === Post::class ? 'name' : 'url';
+         
+                $query->where($column, 'name 1');
+            }
+        )->get();
+
+        dd($comments);
     }
 }
