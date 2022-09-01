@@ -104,11 +104,18 @@ class RelationshipController extends Controller
         // $user = User::find(11);
         // dd($user->image);
 
-        $post = Post::find(1);
-        dd($post->image);
+        // $post = Post::find(1);
+        // dd($post->image);
 
-        $image = Image::find(2);
-        dd($image->imageable);
+        // $image = Image::find(2);
+        // dd($image->imageable);
+
+        $user = User::find(8);
+
+        $post = Post::query()->find(5);
+
+        $post->user()->associate($user);
+        $post->save();
     }
 
     public function polyOneMany()
@@ -294,7 +301,7 @@ class RelationshipController extends Controller
         // })->get();
         // dd($user);
 
-            
+
         $comments = Comment::query()->whereHasMorph(
             'commentable',
             [Post::class, Image::class],
@@ -305,7 +312,7 @@ class RelationshipController extends Controller
             // }
             function (Builder $query, $type) {
                 $column = $type === Post::class ? 'name' : 'url';
-         
+
                 $query->where($column, 'name 1');
             }
         )->get();

@@ -46,6 +46,10 @@
                     </div>
 
                     <div class="card-body">
+                        <a class="btn btn-primary w-100" href="{{ route('relationship.poly.oneone') }}">Insert and Updating Relate Mode</a>
+                    </div>
+
+                    <div class="card-body">
                         <a class="btn btn-primary w-100" href="{{ route('relationship.condition') }}">Condition Relationship</a>
                     </div>
 
