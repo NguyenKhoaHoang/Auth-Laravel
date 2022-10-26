@@ -41,13 +41,17 @@ Route::prefix('/home')->middleware('auth')->group(function () {
         Route::get('/{comment_id}', [HomeController::class, 'editComment'])->name('commment.edit');
     });
 
-    Route::get('/send-mail', [HomeController::class, 'sendMail'])->name('mail');
+    // Route::get('/send-mail', [HomeController::class, 'sendMail'])->name('mail');
+    Route::get("email", [HomeController::class, "email"])->name("email");
+    Route::post('/send-mail', [HomeController::class, 'smtpEmail'])->name('send-email');
 
     Route::get('/notification', [HomeController::class, 'notification'])->name('notification');
     Route::get('/mark-as-read/{id}', [HomeController::class, 'markAsRead'])->name('markAsRead');
 
     Route::get('/cache', [HomeController::class, 'cache'])->name('cache');
     Route::get('/http-client', [HomeController::class, 'httpClient'])->name('httpClient');
+
+    Route::get('/store-csv', [HomeController::class, 'storeCSV'])->name('storeCSV');
 
     Route::prefix('/relationship')->group(function () {
         Route::get('/avatar', [RelationshipController::class, 'avatar'])->name('relationship.avatar');

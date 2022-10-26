@@ -62,7 +62,7 @@
                     </div>
 
                     <div class="card-body">
-                        <a class="btn btn-primary w-100" href="{{ route('mail') }}">Send Email</a>
+                        <a class="btn btn-primary w-100" href="{{ route('email') }}">Send Email</a>
                     </div>
 
                     <div class="card-body">
@@ -87,6 +87,10 @@
 
                     <div class="card-body">
                         <a class="btn btn-primary w-100" href="{{ route('httpClient') }}">Http client</a>
+                    </div>
+
+                    <div class="card-body">
+                        <a class="btn btn-primary w-100" href="{{ route('storeCSV') }}">Store CSV</a>
                     </div>
                 </div>
             </div>

@@ -28,7 +28,11 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Storage;
+use League\Csv\CharsetConverter;
 use Maknz\Slack\Client as SlackClient;
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception as MailException;
+use League\Csv\Writer;
 
 class HomeController extends Controller
 {
@@ -291,6 +295,30 @@ class HomeController extends Controller
         return $result;
     }
 
+    public function storeCSV()
+    {
+        $converter = (new CharsetConverter())->inputEncoding('UTF-8')->outputEncoding('SJIS');
+        // $header = ['first name', 'last name', 'email'];
+        // $records = [
+        //     [1, 2, 3],
+        //     ['foo', 'bar', 'baz'],
+        //     ['john', 'doe', 'john.doe@example.com'],
+        // ];
+
+        // //load the CSV document from a string
+        // $csv = Writer::createFromString();
+
+        // //insert the header
+        // $csv->insertOne($header);
+
+        // //insert all the records
+        // $csv->insertAll($records);
+
+        // $csvContent = $csv->toString();
+        // Storage::put('public/csv/test.csv', $csv);
+        // dd($path);
+    }
+
     public function storeComment(Request $request)
     {
         $test = $request->test_cookie;
@@ -343,5 +371,39 @@ class HomeController extends Controller
         // } else {
         //     echo "Ban ko co quyen";
         // }
+    }
+
+    public function smtpEmail(Request $request)
+    {
+        require base_path("vendor/autoload.php");
+        $mail = new PHPMailer(true);
+        try {
+            // Email server settings
+            $mail->SMTPDebug = 0;
+            $mail->isSMTP();
+            $mail->Host = config('mail.mailers.smtp.host');             //  smtp host
+            $mail->SMTPAuth = true;
+            $mail->Username = config('mail.mailers.smtp.username');   //  sender username
+            $mail->Password = config('mail.mailers.smtp.password');       // sender password
+            $mail->SMTPSecure = config('mail.mailers.smtp.encryption');                  // encryption - ssl/tls
+            $mail->Port = config('mail.mailers.smtp.port');
+            $mail->setFrom(config('mail.from.address'), config('mail.from.name'));
+            $mail->addAddress($request->emailRecipient);
+            $mail->isHTML(true);                // Set email content format to HTML
+            $mail->Subject = $request->emailSubject;
+            $mail->Body    = $request->emailBody;
+            if (!$mail->send()) {
+                return back()->with("failed", "Email not sent.")->withErrors($mail->ErrorInfo);
+            } else {
+                return back()->with("success", "Email has been sent.");
+            }
+        } catch (MailException $e) {
+            return back()->with('error', 'Message could not be sent.');
+        }
+    }
+
+    public function email()
+    {
+        return view("mail.smtp");
     }
 }
