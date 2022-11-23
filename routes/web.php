@@ -20,7 +20,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Auth::routes();
+// Auth::routes();
 
 // Route::middleware('password.confirm')
 //     ->get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
@@ -46,6 +46,7 @@ Route::prefix('/home')->middleware('auth')->group(function () {
     Route::post('/send-mail', [HomeController::class, 'smtpEmail'])->name('send-email');
 
     Route::get('/notification', [HomeController::class, 'notification'])->name('notification');
+    Route::get('/post', [HomeController::class, 'post'])->name('post');
     Route::get('/mark-as-read/{id}', [HomeController::class, 'markAsRead'])->name('markAsRead');
 
     Route::get('/cache', [HomeController::class, 'cache'])->name('cache');
