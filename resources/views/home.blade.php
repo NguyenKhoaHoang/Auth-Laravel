@@ -38,6 +38,10 @@
                     </div>
 
                     <div class="card-body">
+                        <a class="btn btn-primary w-100" href="{{ route('post') }}">Post</a>
+                    </div>
+
+                    <div class="card-body">
                         <a class="btn btn-primary w-100" href="{{ route('relationship.avatar') }}">Relationship</a>
                     </div>
 
@@ -46,7 +50,7 @@
                     </div>
 
                     <div class="card-body">
-                        <a class="btn btn-primary w-100" href="{{ route('relationship.poly.oneone') }}">Insert and Updating Relate Mode</a>
+                        <a class="btn btn-primary w-100" href="{{ route('relationship.poly.manycreate') }}">Insert and Updating Relate Mode</a>
                     </div>
 
                     <div class="card-body">
