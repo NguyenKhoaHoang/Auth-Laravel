@@ -12,10 +12,15 @@ use App\Notifications\InvoicePaid;
 use App\Notifications\SmSNotification;
 use App\Notifications\UserFollowNotification;
 use App\Notifications\WelcomNotification;
+use App\Repositories\Criteria\PostCriteria;
+use App\Repositories\Criteria\WithRelationsCriteria;
+use App\Repositories\PostRepository;
 use App\Services\CommentService;
+use Carbon\Carbon;
 use Exception;
 use GuzzleHttp\Client;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
@@ -37,15 +42,32 @@ use League\Csv\Writer;
 class HomeController extends Controller
 {
     private $commentService;
+    protected $repository;
+    use AuthenticatesUsers;
     /**
      * Create a new controller instance.
      *
      * @return void
      */
-    public function __construct(CommentService $commentService)
+
+    public function login(Request $request)
+    {
+        $token = auth('user')->attempt(['email' => $request->email, 'password' => $request->password]);
+        return $token;
+    }
+    public function __construct(CommentService $commentService, PostRepository $repository)
     {
         // $this->middleware('auth');
         $this->commentService = $commentService;
+        $this->repository = $repository;
+    }
+
+    public function post()
+    {
+        $this->repository->popCriteria(PostCriteria::class);
+        $this->repository->pushCriteria(new WithRelationsCriteria('comments', $this->repository->allowRelation()));
+        $posts = $this->repository->all();
+        return response()->json($posts);
     }
 
     /**
@@ -375,31 +397,38 @@ class HomeController extends Controller
 
     public function smtpEmail(Request $request)
     {
-        require base_path("vendor/autoload.php");
-        $mail = new PHPMailer(true);
-        try {
-            // Email server settings
-            $mail->SMTPDebug = 0;
-            $mail->isSMTP();
-            $mail->Host = config('mail.mailers.smtp.host');             //  smtp host
-            $mail->SMTPAuth = true;
-            $mail->Username = config('mail.mailers.smtp.username');   //  sender username
-            $mail->Password = config('mail.mailers.smtp.password');       // sender password
-            $mail->SMTPSecure = config('mail.mailers.smtp.encryption');                  // encryption - ssl/tls
-            $mail->Port = config('mail.mailers.smtp.port');
-            $mail->setFrom(config('mail.from.address'), config('mail.from.name'));
-            $mail->addAddress($request->emailRecipient);
-            $mail->isHTML(true);                // Set email content format to HTML
-            $mail->Subject = $request->emailSubject;
-            $mail->Body    = $request->emailBody;
-            if (!$mail->send()) {
-                return back()->with("failed", "Email not sent.")->withErrors($mail->ErrorInfo);
-            } else {
-                return back()->with("success", "Email has been sent.");
-            }
-        } catch (MailException $e) {
-            return back()->with('error', 'Message could not be sent.');
-        }
+        // require base_path("vendor/autoload.php");
+        // $mail = new PHPMailer(true);
+        // try {
+        //     // Email server settings
+        //     $mail->SMTPDebug = 0;
+        //     $mail->isSMTP();
+        //     $mail->Host = config('mail.mailers.smtp.host');             //  smtp host
+        //     $mail->SMTPAuth = true;
+        //     $mail->Username = config('mail.mailers.smtp.username');   //  sender username
+        //     $mail->Password = config('mail.mailers.smtp.password');       // sender password
+        //     $mail->SMTPSecure = config('mail.mailers.smtp.encryption');                  // encryption - ssl/tls
+        //     $mail->Port = config('mail.mailers.smtp.port');
+        //     $mail->setFrom(config('mail.from.address'), config('mail.from.name'));
+        //     $mail->addAddress($request->emailRecipient);
+        //     $mail->isHTML(true);                // Set email content format to HTML
+        //     $mail->Subject = $request->emailSubject;
+        //     $mail->Body    = $request->emailBody;
+        //     if (!$mail->send()) {
+        //         return back()->with("failed", "Email not sent.")->withErrors($mail->ErrorInfo);
+        //     } else {
+        //         return back()->with("success", "Email has been sent.");
+        //     }
+        // } catch (MailException $e) {
+        //     return back()->with('error', 'Message could not be sent.');
+        // }
+
+        $now = Carbon::now(config('common.timezone_jp'));
+        // dd($now);
+        $test2 = Carbon::parse('2022-11-01 03:46:37');
+        // dd($test2);
+        $test = $now->copy()->diffInDays($test2);
+        dd($test);
     }
 
     public function email()

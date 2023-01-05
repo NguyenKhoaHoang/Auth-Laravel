@@ -107,15 +107,15 @@ class RelationshipController extends Controller
         // $post = Post::find(1);
         // dd($post->image);
 
-        // $image = Image::find(2);
-        // dd($image->imageable);
+        $image = Image::find(2);
+        dd($image->imageable);
 
-        $user = User::find(8);
+        // $user = User::find(8);
 
-        $post = Post::query()->find(5);
+        // $post = Post::query()->find(5);
 
-        $post->user()->associate($user);
-        $post->save();
+        // $post->user()->associate($user);
+        // $post->save();
     }
 
     public function polyOneMany()
@@ -131,18 +131,23 @@ class RelationshipController extends Controller
 
     public function polyOneCreate()
     {
-        $post = Post::find(2);
+        // $post = Post::find(2);
+        $image = Image::find(1);
 
-        $image = new Image([
-            'url' => 'url post'
-        ]);
-        $post->image()->save($image);
+
+        // $image = new Image([
+        //     'url' => 'url post'
+        // ]);
+        // $post->image()->save($image);
 
         $comment = new Comment([
-            'content' => 'content 3',
-            'user_id' => 11
+            'content' => 'image 3',
+            'user_id' => 5,
+            'photo' => 'link image 3'
         ]);
-        $post->comments()->save($comment);
+        $image->comments()->save($comment);
+
+        // $post->comments()->save($comment);
 
         // $post->comments()->createMany([
         //     [
@@ -159,13 +164,13 @@ class RelationshipController extends Controller
 
     public function polyManyCreate()
     {
-        // cach 1
+        // // cach 1
         // $tag1 = new Tag([
-        //     'name' => 'tag1'
+        //     'name' => 'tag3'
         // ]);
 
         // $tag2 = new Tag([
-        //     'name' => 'tag2'
+        //     'name' => 'tag4'
         // ]);
         // $post = Post::find(2);
         // $post->tags()->saveMany([$tag1, $tag2]);
@@ -173,8 +178,9 @@ class RelationshipController extends Controller
         // cach 2
         $tag1 = Tag::find(1);
         $tag2 = Tag::find(2);
+        $tag3 = Tag::find(3);
 
-        $post = Post::find(1);
+        $post = Post::find(2);
 
         $category = Category::find(3);
 
@@ -184,9 +190,10 @@ class RelationshipController extends Controller
             $tag2->id
         ]);
 
-        $category->tags()->sync([
-            $tag1->id
-        ]);
+        // $category->tags()->sync([
+        //     $tag1->id,
+        //     $tag3->id
+        // ]);
         return true;
     }
 
@@ -194,9 +201,11 @@ class RelationshipController extends Controller
     {
         $post = Post::find(2);
         $tag = Tag::find(1);
-        dd($tag->categories);
+        $category = Category::find(3);
+        // dd($tag->categories);
 
         // dd($post->tags);
+        return response()->json($post->tags);
     }
 
     /**

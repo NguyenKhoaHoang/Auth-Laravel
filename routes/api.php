@@ -21,3 +21,19 @@ Route::post("/test-upload", [HomeController::class, 'uploadAPI'])->name('uploadA
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::get('/aaaa', function () {
+    return response()->json([
+        'ngon2' => true
+    ]);
+});
+
+Route::post('/login', [HomeController::class, 'login']);
+
+Route::middleware(['auth:user'])->group(function () {
+    Route::get('/user', function () {
+        return response()->json([
+            'ngon' => true
+        ]);
+    });
+});
